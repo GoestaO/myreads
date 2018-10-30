@@ -2,7 +2,7 @@ import React from 'react';
 import BookshelfChanger from '../BookshelfChanger/BookshelfChanger';
 
 const Book = (props) => {
-  const {book} = props;  
+  const {book, setNewShelf} = props;
   return (<div className="book">
     <div className="book-top">
       <div className="book-cover" style={{
@@ -11,11 +11,16 @@ const Book = (props) => {
           backgroundImage: `url(${book.imageLinks.thumbnail}`
         }}></div>
       <div>
-        <BookshelfChanger/>
+        <BookshelfChanger book={book} setNewShelf={props.setNewShelf}/>
       </div>
     </div>
     <div className="book-title">{book.title}</div>
-    <div className="book-authors">{book.authors.map((author) => author + ", ")}</div>
+    <div className="book-authors">
+      {
+        (book.authors)
+          ? (book.authors.map((author) => author + " "))
+          : " "
+      }</div>
   </div>);
 }
 

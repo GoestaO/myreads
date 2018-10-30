@@ -1,16 +1,18 @@
 import React from 'react';
 import Book from '../Book/Book';
-import BookshelfChanger from '../BookshelfChanger/BookshelfChanger';
+import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
 
 const Bookshelf = (props) => {
-  const {category, books} = props;
+  const {category, books, setNewShelf} = props;
   return (<div>
-    <h2 className="bookshelf-title">{category}</h2>
+    <h2 className="bookshelf-title">{category}</h2>  
     <div className="bookshelf-books">
       <ol className="books-grid">
-        {books.map((book, index) => (<li key={index}><Book book={book}/></li>))}
+        {books.map((book) => (<li key={book.id}><Book setNewShelf={setNewShelf} book={book}/></li>))}
       </ol>
     </div>
+
   </div>);
 }
 
