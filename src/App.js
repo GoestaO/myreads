@@ -2,67 +2,62 @@ import React from 'react'
 import * as BooksAPI from './BooksAPI';
 import './App.css'
 import Search from './components/Search/Search';
-import {Route, Link} from "react-router-dom";
+import {BrowserRouter as Router, Route, Link} from "react-router-dom";
 import Bookshelf from './components/Bookshelf/Bookshelf';
 
 class BooksApp extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      booksOnShelves: []
-    }
+  state = {
+    /**
+     * TODO: Instead of using this state variable to keep track of which page
+     * we're on, use the URL in the browser's address bar. This will ensure that
+     * users can use the browser's back and forward buttons to navigate between
+     * pages, as well as provide a good URL they can bookmark and share.
+     */
+    allBooks: [],
+    showSearchPage: false
   }
 
   componentDidMount() {
-    // Initial load of all books, update state with the result
+
+    // Initial load of all books, update state
     BooksAPI
       .getAll()
-      .then((booksOnShelves) => this.setState({booksOnShelves: booksOnShelves}));
-  }
-
-  setNewShelf = (book, newShelf) => {
-    BooksAPI
-      .update(book, newShelf)
-      .then(() => BooksAPI.getAll().then((booksOnShelves) => this.setState({booksOnShelves: booksOnShelves})));
+      .then((allBooks) => this.setState({allBooks: allBooks}));
   }
 
   render() {
-    return (<div>
-      <Route exact path="/" render={() => (<div className="app">
-          <div className="list-books">
-            <div className="list-books-title">
-              <h1>MyReads</h1>
+    return (<div className="app">
+      <div className="list-books">
+        <div className="list-books-title">
+          <h1>MyReads</h1>
+        </div>
+        <div className="list-books-content">
+          <div>
+            <div className="bookshelf">
+              <Bookshelf category="Currently Reading" books={this
+                  .state
+                  .allBooks
+                  .filter((book) => book.shelf === 'currentlyReading')}/>
             </div>
-            <div className="list-books-content">
-              <div>
-                <div className="bookshelf">
-                  <Bookshelf setNewShelf={this.setNewShelf} category="Currently Reading" books={this
-                      .state
-                      .booksOnShelves
-                      .filter((book) => book.shelf === 'currentlyReading')}/>
-                </div>
-                <div className="bookshelf">
-                  <Bookshelf setNewShelf={this.setNewShelf} category="Want to Read" books={this
-                      .state
-                      .booksOnShelves
-                      .filter((book) => book.shelf === 'wantToRead')}/>
-                </div>
-                <div className="bookshelf">
-                  <Bookshelf setNewShelf={this.setNewShelf} category="Read" books={this
-                      .state
-                      .booksOnShelves
-                      .filter((book) => book.shelf === 'read')}/>
-                </div>
-              </div>
+            <div className="bookshelf">
+              <Bookshelf category="Want to Read" books={this
+                  .state
+                  .allBooks
+                  .filter((book) => book.shelf === 'wanttoRead')}/>
             </div>
-            <div className="open-search">
-              <Link to="/search"/>
+            <div className="bookshelf">
+              <Bookshelf category="Read" books={this
+                  .state
+                  .allBooks
+                  .filter((book) => book.shelf === 'read')}/>
             </div>
           </div>
-        </div>)}></Route>
-
-      <Route exact path="/search" component={(props) => <Search {...props} setNewShelf={this.setNewShelf} booksOnShelves={this.state.booksOnShelves}/>}></Route>
-    </div>)
+        </div>
+        <div className="open-search">
+          <Link to="/search"/>
+        </div>
+      </div>
+    </div>);
   }
 }
 
