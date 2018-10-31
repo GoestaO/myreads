@@ -1,28 +1,40 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class BookshelfChanger extends React.Component {
 
-  state = {
-    shelf: ""
+  constructor(props) {
+    super(props);
+    this.state = {
+      book: ''
+    }
   }
 
-  componentDidMount() {
-    const book = this.props.book;
-    this.setState({shelf: book.shelf});
+  componentWillMount() {
+    let book = this.props.book;
+    if (book && !book.shelf) {
+      book.shelf = 'None';
+    }
+    this.setState({book: book});
   }
 
   handleChange = (event) => {
+    event.preventDefault();
     const newShelf = event.target.value;
+    let book = this.state.book;
     this
       .props
-      .setNewShelf(this.props.book, newShelf);
+      .setNewShelf(book, newShelf);
 
   }
 
   render() {
     return (<div className="book-shelf-changer">
       <form>
-        <select defaultValue={this.props.book.shelf} onChange={this.handleChange}>
+        <select defaultValue={(
+            this.state.book.shelf !== "None")
+            ? (this.state.book.shelf)
+            : "none"} onChange={this.handleChange}>
           <option value="move" disabled="disabled">Move to...</option>
           <option value="currentlyReading">Currently Reading</option>
           <option value="wantToRead">Want to Read</option>
@@ -33,4 +45,9 @@ class BookshelfChanger extends React.Component {
     </div>);
   }
 }
+BookshelfChanger.propTypes = {
+  book: PropTypes.object.isRequired,
+  setNewShelf: PropTypes.func.isRequired
+}
+
 export default BookshelfChanger;
