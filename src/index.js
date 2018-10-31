@@ -2,14 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import './index.css'
-import {BrowserRouter as Router, Route, Link} from "react-router-dom";
-import Search from './components/Search/Search';
+import {BrowserRouter as Router} from "react-router-dom";
 
 ReactDOM.render(<Router>
-  {/* <Route path="/" exact="exact" component={Index}/> */}
-  <div>
-    <App/>
-    <Route exact path="/search/" component={Search}/>
-  </div>
-  {/* <Route path="/users/" component={Users}/> */}
+  <App/>
 </Router>, document.getElementById('root'))
